@@ -27,7 +27,7 @@ class Host:
     def __init__(self, poisson_parameter):
         self.poisson_parameter = poisson_parameter
 
-    def generate_packets(self, simulation_time: int) -> List[Packet]:
+    def generate_packets(self, simulation_time: float) -> List[Packet]:
         packets = []
         time = 0
         while time <= simulation_time:
