@@ -1,13 +1,19 @@
 from enum import Enum
 from typing import Optional, List
 
-import numpy as np
+from src.generator import generate_exponential_variable, weighted_sample_enum
 
 
 class PacketPriority(Enum):
     HIGH = 2
     MEDIUM = 3
     LOW = 5
+
+
+class PacketPriorityProbability(Enum):
+    HIGH = 0.2
+    MEDIUM = 0.3
+    LOW = 0.5
 
 
 class Packet:
@@ -34,7 +40,7 @@ class Host:
         packets = []
         time = 0
         while time <= simulation_time:
-            sample_priority = PacketPriority.HIGH
+            sample_priority = weighted_sample_enum(PacketPriority, PacketPriorityProbability)
             packets.append(Packet(entry_time=time, priority=sample_priority))
-            time += np.random.exponential(self.poisson_parameter, 1)
+            time += generate_exponential_variable(1 / self.poisson_parameter, 1)
         return packets
