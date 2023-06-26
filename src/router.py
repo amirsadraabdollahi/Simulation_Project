@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+import numpy as np
+
 from src.host import Packet
 from src.queue import Queue
 
@@ -7,18 +9,20 @@ from src.queue import Queue
 class Core:
     def __init__(self, poisson_parameter: float):
         self.poisson_parameter = poisson_parameter
+        self.packet: Optional[Packet] = None
 
     def get_release_time(self) -> float:
-        return 0
+        return self.packet.execution_end_time
 
     def release(self):
-        pass
+        self.packet = None
 
     def is_free(self) -> bool:
-        return False
+        return self.packet is None
 
     def execute(self, packet):
-        pass
+        self.packet = packet
+        self.packet.service_time = np.random.exponential(self.poisson_parameter, 1)
 
 
 class Router:

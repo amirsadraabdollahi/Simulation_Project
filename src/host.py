@@ -16,8 +16,11 @@ class Packet:
         self.entry_time: float = entry_time
         self.execution_start_time: Optional[float] = None
         self.service_time: Optional[float] = None
-        self.execution_end_time: Optional[float] = None
         self.priority = priority
+
+    @property
+    def execution_end_time(self) -> Optional[float]:
+        return self.execution_start_time + self.service_time
 
     def get_entry_time(self):
         return self.entry_time
