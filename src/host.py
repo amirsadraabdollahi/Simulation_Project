@@ -4,15 +4,15 @@ from typing import Optional, List
 import numpy as np
 
 
-class Priority(Enum):
-    HIGH = 5
-    MEDIUM = 10 / 3
-    LOW = 2
+class PacketPriority(Enum):
+    HIGH = 2
+    MEDIUM = 3
+    LOW = 5
 
 
 class Packet:
 
-    def __init__(self, entry_time: float, priority: Priority):
+    def __init__(self, entry_time: float, priority: PacketPriority):
         self.entry_time: float = entry_time
         self.execution_start_time: Optional[float] = None
         self.service_time: Optional[float] = None
@@ -31,7 +31,7 @@ class Host:
         packets = []
         time = 0
         while time <= simulation_time:
-            sample_priority = Priority.HIGH
+            sample_priority = PacketPriority.HIGH
             packets.append(Packet(entry_time=time, priority=sample_priority))
             time += np.random.exponential(self.poisson_parameter, 1)
         return packets

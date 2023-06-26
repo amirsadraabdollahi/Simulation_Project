@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from enum import Enum
+from typing import List, Optional, Type
 
-from src.host import Packet, Priority
+from src.host import Packet, PacketPriority
 
 
 class Core:
@@ -100,4 +101,34 @@ class FIFORouter(Router):
 class NPPSRouter(Router):
     def generate_queues(self, length_limit):
         return PriorityQueue(length_limit=length_limit)
+
+
+class WRRRouter(Router):
+
+    def __init__(self, packet_list: List[Packet], processors_num: int, core_poisson_parameter: float,
+                 length_limit: int):
+        super().__init__(packet_list, processors_num, core_poisson_parameter, length_limit)
+        self.priorities = self.get_priorities(PacketPriority)
+        self.turn = 0
+        self.sent_packet = 0
+
+    def generate_queues(self, length_limit):
+        return [FIFOQueue(length_limit=length_limit) for _ in range(len(PacketPriority))]
+
+    def get_priorities(self, packet_priority: Type[Enum]) -> List[Enum]:
+        priorities = [priority for priority in packet_priority]
+        priorities.sort(key=lambda e: e.value)
+        return priorities
+
+    def insert_packet(self, packet: Packet):
+        self.queue[self.priorities.index(packet.priority)].push(packet)
+
+    def get_packet_from_queue(self) -> Optional[Packet]:
+        if self.sent_packet >= self.priorities[self.turn].value:
+            self.turn = (self.turn + 1) % len(self.priorities)
+            self.sent_packet = 0
+        popped_packet = self.queue[self.turn].pop()
+        if popped_packet:
+            self.sent_packet += 1
+        return popped_packet
 
