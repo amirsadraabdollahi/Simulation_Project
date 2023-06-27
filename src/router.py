@@ -14,7 +14,7 @@ class Core:
 
     def get_release_time(self, time) -> float:
         if self.packet:
-            return self.packet.execution_end_time
+            return max(self.packet.execution_end_time, time)
         return time
 
     def release(self):
@@ -47,6 +47,9 @@ class Router:
                 if execution_packet:
                     execution_packet.execution_start_time = time
                     min_time_released_core.execute(execution_packet)
+                else:
+                    self.insert_packet(self.packets.pop(0))
+                    time = packet_entry_time
             else:
                 self.insert_packet(self.packets.pop(0))
                 time = packet_entry_time

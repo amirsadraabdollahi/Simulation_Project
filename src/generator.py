@@ -4,7 +4,7 @@ import numpy as np
 
 
 def generate_exponential_variable(parameter, count):
-    return np.random.exponential(parameter, count)
+    return np.random.exponential(parameter, count)[0]
 
 
 def weighted_sample_enum(enum_array, weight_enum_array):
