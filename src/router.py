@@ -1,7 +1,5 @@
 from typing import List, Optional
 
-import numpy as np
-
 from src.generator import generate_exponential_variable
 from src.host import Packet
 from src.queue import Queue
@@ -25,6 +23,7 @@ class Core:
 
     def execute(self, packet):
         self.packet = packet
+        self.packet.executed_by = self
         self.packet.service_time = generate_exponential_variable(self.exponential_parameter, 1)
 
 
@@ -62,3 +61,6 @@ class Router:
 
     def get_packet_from_queue(self) -> Optional[Packet]:
         return self.queue.pop()
+
+    def get_cores(self):
+        return self.cores

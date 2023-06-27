@@ -27,6 +27,8 @@ class FIFOQueue(Queue):
     def push(self, packet: Packet):
         if self.__get_length() < self.length_limit:
             self.__push_packet(packet)
+        else:
+            packet.dropped = True
 
     def pop(self) -> Optional[Packet]:
         if self.__get_length() > 0:

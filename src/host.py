@@ -23,6 +23,8 @@ class Packet:
         self.execution_start_time: Optional[float] = None
         self.service_time: Optional[float] = None
         self.priority = priority
+        self.executed_by = None
+        self.dropped = False
 
     @property
     def execution_end_time(self) -> Optional[float]:
