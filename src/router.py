@@ -6,9 +6,13 @@ from src.queue import Queue
 
 
 class Core:
-    def __init__(self, exponential_parameter: float):
+    def __init__(self, id: int, exponential_parameter: float):
+        self.id = id
         self.exponential_parameter = exponential_parameter
         self.packet: Optional[Packet] = None
+
+    def __str__(self) -> str:
+        return f"Core {self.id}"
 
     def get_release_time(self, time) -> float:
         if self.packet:
@@ -24,14 +28,23 @@ class Core:
     def execute(self, packet):
         self.packet = packet
         self.packet.executed_by = self
-        self.packet.service_time = generate_exponential_variable(self.exponential_parameter, 1)
+        self.packet.service_time = generate_exponential_variable(
+            self.exponential_parameter, 1
+        )
 
 
 class Router:
-    def __init__(self, packet_list: List[Packet], processors_num: int, core_exponential_parameter: float,
-                 queue: Queue):
+    def __init__(
+        self,
+        packet_list: List[Packet],
+        processors_num: int,
+        core_exponential_parameter: float,
+        queue: Queue,
+    ):
         self.packets = packet_list
-        self.cores = [Core(core_exponential_parameter) for _ in range(processors_num)]
+        self.cores = [
+            Core(i, core_exponential_parameter) for i in range(processors_num)
+        ]
         self.queue = queue
 
     def simulate(self, simulation_time):

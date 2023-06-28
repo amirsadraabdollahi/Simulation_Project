@@ -29,7 +29,7 @@ def main():
 
     cores = router.get_cores()
     for core in cores:
-        print(f'average utilization of core {core}: {average_utilization_of_core(packets, core, T)}')
+        print(f'average utilization of {core}: {average_utilization_of_core(packets, core, T)}')
 
     print(f'count of dropped packets: {count_of_dropped_packets(packets)}')
 
