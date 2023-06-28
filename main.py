@@ -6,14 +6,15 @@ from src.host import Host, PacketPriority
 from src.queue import service_policy_dict
 from src.router import Router
 from src.statistics import average_length_of_all_queue, average_time_in_all_queue, average_time_in_queue, \
-    average_utilization_of_core, count_of_dropped_packets, accumulate_high_priority_packet_diagram
+    average_utilization_of_core, count_of_dropped_packets, accumulate_high_priority_packet_diagram, \
+    count_of_sent_packets
 
 
 def main():
     X, Y, T = 6, 1 / 2, 20
     PROCESSORS_NUM = 2
-    SERVICE_POLICY = "WRR"
     LENGTH_LIMIT = 10
+    SERVICE_POLICY = "NPPS"
     queue = service_policy_dict[SERVICE_POLICY](length_limit=LENGTH_LIMIT)
     host = Host(poisson_parameter=X)
     packets = host.generate_packets(simulation_time=T)
@@ -30,9 +31,10 @@ def main():
     cores = router.get_cores()
     for core in cores:
         print(f'average utilization of {core}: {average_utilization_of_core(packets, core, T)}')
-
     print(f'count of dropped packets: {count_of_dropped_packets(packets)}')
+    print(f'count of sent packets: {count_of_sent_packets(packets)}')
     accumulate_high_priority_packet_diagram(packets, SERVICE_POLICY, T)
+
 
 if __name__ == '__main__':
     main()

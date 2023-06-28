@@ -121,10 +121,18 @@ def accumulate_high_priority_packet_diagram(packets: List[Packet], service_polic
                     time_i += min(change_times[i], simulation_time) - packet.entry_time
         accumulate_times.append(time_i)
     # Assuming x and y are your lists
-    x = [ '%.2f' % elem for elem in change_times ]
+    x = ['%.2f' % elem for elem in change_times]
 
     plt.plot(x, accumulate_times)
     plt.xlabel('time')
     plt.ylabel('CDF time')
     plt.title(f'Accumulative time in queue for High priority packets in {service_policy}')
     plt.show()
+
+
+def count_of_sent_packets(packets: List[Packet]):
+    count = 0
+    for packet in packets:
+        if packet.service_time:
+            count += 1
+    return count
